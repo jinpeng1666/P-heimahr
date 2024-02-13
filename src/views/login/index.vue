@@ -78,9 +78,10 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.form.validate((isOK) => {
+      this.$refs.form.validate(async(isOK) => {
         if (isOK) {
-          alert('校验成功')
+          await this.$store.dispatch('user/login', this.loginForm)
+          this.$router.push('/')
         }
       })
     }
