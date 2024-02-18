@@ -8,7 +8,7 @@ import store from '@/store'
 const whiteList = ['/login', '/404']
 
 // 前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   nprogress.start()
 
   if (store.getters.token) {
@@ -16,6 +16,9 @@ router.beforeEach((to, from, next) => {
       next('/')
       nprogress.done()
     } else {
+      if (!store.getters.userId) {
+        await store.dispatch('user/getUserInfo')
+      }
       next()
     }
   } else {
