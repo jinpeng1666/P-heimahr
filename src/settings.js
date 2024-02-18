@@ -15,5 +15,6 @@ module.exports = {
    * @description Whether show the logo in sidebar
    */
   // 是否显示侧边栏的logo
-  sidebarLogo: true
+  sidebarLogo: true,
+  "javascript.validate.enable": false
 }
