@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 import { Message } from 'element-ui'
 
 // 创建一个新的axios示例
@@ -26,7 +27,15 @@ service.interceptors.response.use((response) => {
     Message({ type: 'error', message })
     return Promise.reject(new Error(message))
   }
-}, (error) => {
+}, async(error) => {
+  // eslint-disable-next-line no-empty
+  if (error.response.status === 401) {
+    Message({ type: 'warning', message: 'token超时'})
+    await store.dispatch('user/logout')
+    router.push('/login')
+    return Promise.reject(error)
+  }
+
   Message({ type: 'error', message: error.message })
   return Promise.reject(error)
 })
