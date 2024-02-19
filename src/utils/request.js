@@ -30,7 +30,7 @@ service.interceptors.response.use((response) => {
 }, async(error) => {
   // eslint-disable-next-line no-empty
   if (error.response.status === 401) {
-    Message({ type: 'warning', message: 'token超时'})
+    Message({ type: 'warning', message: 'token超时' })
     await store.dispatch('user/logout')
     router.push('/login')
     return Promise.reject(error)
