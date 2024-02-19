@@ -16,5 +16,5 @@ module.exports = {
    */
   // 是否显示侧边栏的logo
   sidebarLogo: true,
-  "javascript.validate.enable": false
+  'javascript.validate.enable': false
 }
