@@ -2,7 +2,7 @@
   <div class="container">
     <div class="app-container">
       <!-- 展示树形结构 -->
-      <el-tree :expand-on-click-node="false" default-expand-all="true" :data="depts" :props="defaultProps">
+      <el-tree :expand-on-click-node="false" default-expand-all :data="depts" :props="defaultProps">
         <!-- 节点结构 -->
         <template v-slot="{ data }">
           <el-row style="width:100%;height:40px" type="flex" justify="space-between" align="middle">
@@ -12,7 +12,7 @@
                 {{ data.managerName }}
               </span>
             </el-col>
-            <el-dropdown @command="operateDept">
+            <el-dropdown @command="operateDept($event, data.id)">
               <span class="el-dropdown-link">
                 下拉菜单<i class="el-icon-arrow-down el-icon--right" />
               </span>
@@ -26,7 +26,7 @@
         </template>
       </el-tree>
     </div>
-    <add-dept :show-dialog.sync="showDialog" />
+    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" />
   </div>
 </template>
 <script>
@@ -39,6 +39,7 @@ export default {
   components: { AddDept },
   data() {
     return {
+      currentNodeId: null,
       showDialog: false,
       depts: [],
       defaultProps: {
@@ -55,8 +56,11 @@ export default {
       const result = await getDepartment()
       this.depts = transListToTreeData(result, 0)
     },
-    operateDept(type) {
-      this.showDialog = true
+    operateDept(type, id) {
+      if (type === 'add') {
+        this.showDialog = true
+        this.currentNodeId = id
+      }
     }
   }
 }

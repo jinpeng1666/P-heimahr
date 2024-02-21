@@ -35,6 +35,10 @@ export default {
     showDialog: {
       type: Boolean,
       default: false
+    },
+    currentNodeId: {
+      type: Number,
+      default: null
     }
   },
   data() {
