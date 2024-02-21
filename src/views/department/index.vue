@@ -26,11 +26,11 @@
         </template>
       </el-tree>
     </div>
-    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
+    <add-dept ref="addDept" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
   </div>
 </template>
 <script>
-import { getDepartment } from '@/api/department'
+import { getDepartment, delDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils'
 import AddDept from './components/add-dept.vue'
 
@@ -60,6 +60,18 @@ export default {
       if (type === 'add') {
         this.showDialog = true
         this.currentNodeId = id
+      } else if (type === 'edit') {
+        this.showDialog = true
+        this.currentNodeId = id
+        this.$nextTick(() => {
+          this.$refs.addDept.getDepartmentDetail()
+        })
+      } else {
+        this.$confirm('您确认要删除该部门吗').then(async() => {
+          await delDepartment(id)
+          this.$message.success('删除部门成功')
+          getDepartment()
+        })
       }
     }
   }

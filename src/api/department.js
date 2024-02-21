@@ -28,3 +28,33 @@ export function addDepartment(data) {
     data
   })
 }
+
+/**
+ * 获取部门详情
+ */
+export function getDepartmentDetail(id) {
+  return request({
+    url: `/company/department/${id}`
+  })
+}
+
+/**
+ * 跟新部门
+ */
+export function updateDepartment(data) {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 删除部门
+ */
+export function delDepartment(id) {
+  return request({
+    url: `/company/department/${id}`,
+    method: 'delete'
+  })
+}
