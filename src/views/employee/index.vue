@@ -4,7 +4,7 @@
       <div class="left">
         <el-input style="margin-bottom:10px" type="text" prefix-icon="el-icon-search" size="small" placeholder="输入员工姓名全员搜索" />
         <!-- 树形组件 -->
-        <el-tree :data="depts" :props="defaultProps" :default-expand-all="true" :highlight-current="true" />
+        <el-tree ref="deptTree" node-key="id" :data="depts" :props="defaultProps" :default-expand-all="true" :highlight-current="true" @current-change="selectNode" />
       </div>
       <div class="right">
         <el-row class="opeate-tools" type="flex" justify="end">
@@ -31,6 +31,9 @@ export default {
       defaultProps: {
         label: 'name',
         children: 'children'
+      },
+      queryParams: {
+        departmentId: null
       }
     }
   },
@@ -40,6 +43,13 @@ export default {
   methods: {
     async getDepartment() {
       this.depts = transListToTreeData(await getDepartment(), 0)
+      this.queryParams.departmentId = this.depts[0].id
+      this.$nextTick(() => {
+        this.$refs.deptTree.setCurrentKey(this.queryParams.departmentId)
+      })
+    },
+    selectNode(node) {
+      this.queryParams.departmentId = node.id
     }
   }
 }
