@@ -25,8 +25,7 @@
       </el-table>
       <!-- 分页组件 -->
       <el-row type="flex" style="height:60px" align="middle" justify="end">
-        <el-pagination :page-size="pageParams.pagesize" :current-page="pageParams.page" :total="pageParams.total" 
-       @current-change="changePage" layout="prev, pager, next"></el-pagination>
+        <el-pagination :page-size="pageParams.pagesize" :current-page="pageParams.page" :total="pageParams.total" layout="prev, pager, next" @current-change="changePage" />
       </el-row>
     </div>
   </div>
