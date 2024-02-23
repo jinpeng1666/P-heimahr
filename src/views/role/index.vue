@@ -28,13 +28,14 @@
         <el-pagination :page-size="pageParams.pagesize" :current-page="pageParams.page" :total="pageParams.total" layout="prev, pager, next" @current-change="changePage" />
       </el-row>
       <!-- 放置弹层 -->
-      <el-dialog width="500px" :visible.sync="showDialog" title="新增角色">
+      <el-dialog :visible.sync="showDialog" width="500px" title="新增角色" @close="btnCancel">
         <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
           <el-form-item prop="name" label="角色名称">
             <el-input v-model="roleForm.name" style="width: 300px" size="mini" />
           </el-form-item>
-          <el-form-item label="启用">
-            <el-switch :active-value="1" :inactive-value="0" v-model="roleForm.state" size="mini" />
+          <!-- 如果不需要校验，就不需要写prop属性；重置表单数据，需要prop属性 -->
+          <el-form-item prop="state" label="启用">
+            <el-switch v-model="roleForm.state" :active-value="1" :inactive-value="0" size="mini" />
           </el-form-item>
           <el-form-item prop="description" label="角色描述">
             <el-input v-model="roleForm.description" type="textarea" :rows="3" style="width: 300px" size="mini" />
@@ -42,8 +43,8 @@
           <el-form-item>
             <el-row type="flex" justify="center">
               <el-col :span="12">
-                <el-button size="mini" type="primary">确定</el-button>
-                <el-button size="mini">取消</el-button>
+                <el-button size="mini" type="primary" @click="btnOK">确定</el-button>
+                <el-button size="mini" @click="btnCancel">取消</el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -53,7 +54,7 @@
   </div>
 </template>
 <script>
-import { getRoleList } from '@/api/role'
+import { getRoleList, addRole } from '@/api/role'
 
 export default {
   name: 'Role',
@@ -89,6 +90,20 @@ export default {
     changePage(newPage) {
       this.pageParams.page = newPage
       this.getRoleList()
+    },
+    btnOK() {
+      this.$refs.roleForm.validate(async isOK => {
+        if (isOK) {
+          await addRole(this.roleForm)
+          this.$message.success('新增角色成功')
+          this.getRoleList()
+          this.btnCancel()
+        }
+      })
+    },
+    btnCancel() {
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
     }
   }
 }
