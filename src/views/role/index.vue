@@ -7,19 +7,36 @@
       </div>
       <!-- 表格 -->
       <el-table :data="list">
-        <el-table-column prop="name" align="center" width="200" label="角色" />
+        <el-table-column prop="name" align="center" width="200" label="角色">
+          <template v-slot="{ row }">
+            <el-input v-if="row.isEdit" size="mini" />
+            <span v-else>{{ row.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="state" align="center" width="200" label="启用">
           <!-- 自定义内容 -->
           <template v-slot="{ row }">
-            <span>{{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }}</span>
+            <el-switch v-if="row.isEdit" />
+            <span v-else>{{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="description" align="center" label="描述" />
+        <el-table-column prop="description" align="center" label="描述">
+          <template v-slot="{ row }">
+            <el-input v-if="row.isEdit" type="textarea" />
+            <span v-else>{{ row.description }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作">
-          <template>
-            <el-button size="mini" type="text">分配</el-button>
-            <el-button size="mini" type="text">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+          <template v-slot="{ row }">
+            <template v-if="row.isEdit">
+              <el-button type="primary" size="mini">确定</el-button>
+              <el-button size="mini">取消</el-button>
+            </template>
+            <template v-else>
+              <el-button size="mini" type="text">分配</el-button>
+              <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
+              <el-button size="mini" type="text">删除</el-button>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -86,6 +103,10 @@ export default {
       const { rows, total } = await getRoleList(this.pageParams)
       this.list = rows
       this.pageParams.total = total
+      // 添加编辑标记
+      this.list.forEach(item => {
+        this.$set(item, 'isEdit', false)
+      })
     },
     changePage(newPage) {
       this.pageParams.page = newPage
@@ -104,6 +125,9 @@ export default {
     btnCancel() {
       this.$refs.roleForm.resetFields()
       this.showDialog = false
+    },
+    btnEditRow(row) {
+      row.isEdit = true
     }
   }
 }
