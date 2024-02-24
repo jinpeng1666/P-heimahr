@@ -23,7 +23,7 @@
           <!--手机 聘用形式  -->
           <el-row>
             <el-col :span="12">
-              <el-form-item v-model="userInfo.mobile" label="手机" prop="mobile">
+              <el-form-item v-model="userInfo.mobile" :disabled="!!$route.params.id" label="手机" prop="mobile">
                 <el-input
                   size="mini"
                   class="inputW"
@@ -97,7 +97,7 @@
 
 <script>
 import SelectTree from './components/select-tree.vue'
-import { addEmployee, getEmployeeDetail } from '@/api/employee'
+import { addEmployee, getEmployeeDetail, updateEmployee } from '@/api/employee'
 
 export default {
   components: { SelectTree },
@@ -150,8 +150,14 @@ export default {
     saveData() {
       this.$refs.userForm.validate(async isOK => {
         if (isOK) {
-          await addEmployee(this.userInfo)
-          this.$message.success('新增员工成功')
+          // 判断是否为编辑模式
+          if (this.$route.params.id) {
+            await updateEmployee(this.userInfo)
+            this.$message.success('更新员工成功')
+          } else {
+            await addEmployee(this.userInfo)
+            this.$message.success('新增员工成功')
+          }
           this.$router.push('/employee')
         }
       })
