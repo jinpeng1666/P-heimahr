@@ -19,3 +19,13 @@ export function exportEmployee() {
     responseType: 'blob'
   })
 }
+
+/**
+ * 下载员工导出模板
+ */
+export function getExportTemplate() {
+  return request({
+    url: '/sys/user/import/template',
+    responseType: 'blob'
+  })
+}
