@@ -61,3 +61,12 @@ export function addEmployee(data) {
     data
   })
 }
+
+/**
+ * 获取员工详情
+ */
+export function getEmployeeDetail(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
+}
