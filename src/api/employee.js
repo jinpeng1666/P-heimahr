@@ -9,3 +9,13 @@ export function getEmployeeList(params) {
     params
   })
 }
+
+/**
+ * 导出员工的excel
+ */
+export function exportEmployee() {
+  return request({
+    url: '/sys/user/export',
+    responseType: 'blob'
+  })
+}
