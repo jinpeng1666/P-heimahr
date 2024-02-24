@@ -125,7 +125,7 @@ export function transListToTreeData(list, rootValue) {
     if (item.pid === rootValue) {
       arr.push(item)
       const children = transListToTreeData(list, item.id)
-      item.children = children
+      if (children.length) { item.children = children }
     }
   })
   return arr
