@@ -14,11 +14,22 @@
         </el-row>
         <!-- 表格组件 -->
         <el-table :data="list">
-          <el-table-column prop="staffPhoto" align="center" label="头像" />
+          <el-table-column prop="staffPhoto" align="center" label="头像">
+            <template v-slot="{ row }">
+              <el-avatar v-if="row.staffPhoto" :src="row.staffPhoto" :size="30" />
+              <span v-else class="username">{{ row.username.charAt(0) }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="username" label="姓名" />
           <el-table-column prop="mobile" label="手机号" sortable />
           <el-table-column prop="workNumber" label="工号" sortable />
-          <el-table-column prop="formOfEmployment" label="聘用" />
+          <el-table-column prop="formOfEmployment" label="聘用">
+            <template v-slot="{ row }">
+              <span v-if="row.formOfEmployment === 1">正式</span>
+              <span v-else-if="row.formOfEmployment === 2">非正式</span>
+              <span v-else>无</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="departmentName" label="部门" />
           <el-table-column prop="timeOfEntry" label="入职时间" sortable />
           <el-table-column label="操作" width="280px">
