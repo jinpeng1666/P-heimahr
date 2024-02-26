@@ -3,7 +3,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 import { login, getUserInfo } from '@/api/user'
 
-import { constantRoutes } from '@/router'
+import { constantRoutes, resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
@@ -44,6 +44,7 @@ const actions = {
   logout(context) {
     context.commit('removeToken')
     context.commit('setUserInfo', {})
+    resetRouter()
   }
 }
 
