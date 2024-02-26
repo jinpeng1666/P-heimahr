@@ -70,13 +70,19 @@
         </el-form>
       </el-dialog>
       <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
-        <el-tree node-key="id" :data="permissionData" :props="{ label: 'name'}" show-checkbox default-expand-all :default-checked-keys="permIds" />
+        <el-tree ref="permTree" node-key="id" :data="permissionData" :props="{ label: 'name'}" show-checkbox default-expand-all :default-checked-keys="permIds" />
+        <el-row slot="footer" type="flex" justify="center">
+          <el-col :span="6">
+            <el-button type="primary" size="mini" @click="btnPermissionOK">确定</el-button>
+            <el-button size="mini" @click="showPermissionDialog=false">取消</el-button>
+          </el-col>
+        </el-row>
       </el-dialog>
     </div>
   </div>
 </template>
 <script>
-import { getRoleList, addRole, updateRole, delRole, getRoleDetail } from '@/api/role'
+import { getRoleList, addRole, updateRole, delRole, getRoleDetail, assignPerm } from '@/api/role'
 import { getPermissionList } from '@/api/permission'
 import { transListToTreeData } from '@/utils'
 
@@ -171,6 +177,14 @@ export default {
       this.permIds = permIds
       this.permissionData = transListToTreeData(await getPermissionList(), 0)
       this.showPermissionDialog = true
+    },
+    async btnPermissionOK() {
+      await assignPerm({
+        id: this.currentRoelId,
+        permIds: this.$refs.permTree.getCheckedKeys()
+      })
+      this.$message.success('角色分配权限成功')
+      this.showPermissionDialog = false
     }
   }
 }
