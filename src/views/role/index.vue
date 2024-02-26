@@ -33,7 +33,7 @@
               <el-button size="mini" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="text" @click="btnPermission">分配权限</el-button>
+              <el-button size="mini" type="text" @click="btnPermission(row.id)">分配权限</el-button>
               <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
               <el-popconfirm title="这是一段内容确定删除吗" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" style="margin-left: 10px" size="mini" type="text">删除</el-button>
@@ -70,13 +70,13 @@
         </el-form>
       </el-dialog>
       <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
-        <el-tree :data="permissionData" :props="{ label: 'name'}" show-checkbox default-expand-all />
+        <el-tree node-key="id" :data="permissionData" :props="{ label: 'name'}" show-checkbox default-expand-all :default-checked-keys="permIds" />
       </el-dialog>
     </div>
   </div>
 </template>
 <script>
-import { getRoleList, addRole, updateRole, delRole } from '@/api/role'
+import { getRoleList, addRole, updateRole, delRole, getRoleDetail } from '@/api/role'
 import { getPermissionList } from '@/api/permission'
 import { transListToTreeData } from '@/utils'
 
@@ -101,7 +101,9 @@ export default {
         name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         description: [{ required: true, message: '角色描述不能为空', trigger: 'blur' }]
       },
-      permissionData: []
+      permissionData: [],
+      currentRoelId: null,
+      permIds: []
     }
   },
   created() {
@@ -163,9 +165,12 @@ export default {
       if (this.list.length === 1) this.pageParams.page--
       this.getRoleList()
     },
-    async btnPermission() {
-      this.showPermissionDialog = true
+    async btnPermission(id) {
+      this.currentRoelId = id
+      const { permIds } = await getRoleDetail(id)
+      this.permIds = permIds
       this.permissionData = transListToTreeData(await getPermissionList(), 0)
+      this.showPermissionDialog = true
     }
   }
 }
