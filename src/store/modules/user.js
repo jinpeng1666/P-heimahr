@@ -3,9 +3,12 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 import { login, getUserInfo } from '@/api/user'
 
+import { constantRoutes } from '@/router'
+
 const state = {
   token: getToken(),
-  userInfo: {} // 存储用户基本资料
+  userInfo: {}, // 存储用户基本资料
+  routes: constantRoutes
 }
 
 const mutations = {
@@ -19,6 +22,9 @@ const mutations = {
   },
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo
+  },
+  setRoutes(state, newRoutes) {
+    state.routes = [...constantRoutes, ...newRoutes]
   }
 }
 
