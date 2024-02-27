@@ -21,31 +21,31 @@
             <div class="todo-item">
               <span>组织总人数</span>
               <!-- 起始值 终点值  滚动时间 -->
-              <count-to :start-val="0" :end-val="228" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.employeeTotal" :duration="1000" />
             </div>
             <div class="todo-item">
               <span>正式员工</span>
-              <count-to :start-val="0" :end-val="334" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.regularEmployeeTotal" :duration="1000" />
             </div>
             <div class="todo-item">
               <span>合同待签署</span>
-              <count-to :start-val="0" :end-val="345" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.contractSignTotal" :duration="1000" />
             </div>
             <div class="todo-item">
               <span>待入职</span>
-              <count-to :start-val="0" :end-val="890" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.toBeEmployed" :duration="1000" />
             </div>
             <div class="todo-item">
               <span>本月待转正</span>
-              <count-to :start-val="0" :end-val="117" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.toBeConfirmed" :duration="1000" />
             </div>
             <div class="todo-item">
               <span>本月待离职</span>
-              <count-to :start-val="0" :end-val="234" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.toBeDismissed" :duration="1000" />
             </div>
             <div class="todo-item">
               <span>接口总访问</span>
-              <count-to :start-val="0" :end-val="789" :duration="1000" />
+              <count-to :start-val="0" :end-val="homeData.interfaceAccessTotal" :duration="1000" />
             </div>
           </div>
         </div>
@@ -82,20 +82,20 @@
             <div class="chart-info">
               <div class="info-main">
                 <span>申报人数</span>
-                <count-to :start-val="0" :end-val="223" :duration="1000" />
+                <count-to :start-val="0" :end-val="homeData.socialInsurance?.declarationTotal" :duration="1000" />
               </div>
               <div class="info-list">
                 <div class="info-list-item">
                   <span>待申报(人)</span>
-                  <count-to :start-val="0" :end-val="117" :duration="1000" />
+                  <count-to :start-val="0" :end-val="homeData.socialInsurance?.toDeclareTotal" :duration="1000" />
                 </div>
                 <div class="info-list-item">
                   <span>申报中(人)</span>
-                  <count-to :start-val="0" :end-val="167" :duration="1000" />
+                  <count-to :start-val="0" :end-val="homeData.socialInsurance?.declaringTotal" :duration="1000" />
                 </div>
                 <div class="info-list-item">
                   <span>已申报(人)</span>
-                  <count-to :start-val="0" :end-val="24" :duration="1000" />
+                  <count-to :start-val="0" :end-val="homeData.socialInsurance?.declaredTotal" :duration="1000" />
                 </div>
               </div>
             </div>
@@ -111,20 +111,20 @@
             <div class="chart-info">
               <div class="info-main">
                 <span>申报人数</span>
-                <count-to :start-val="0" :end-val="335" :duration="1000" />
+                <count-to :start-val="0" :end-val="homeData.providentFund?.declarationTotal" :duration="1000" />
               </div>
               <div class="info-list">
                 <div class="info-list-item">
                   <span>待申报(人)</span>
-                  <count-to :start-val="0" :end-val="345" :duration="1000" />
+                  <count-to :start-val="0" :end-val="homeData.providentFund?.toDeclareTotal" :duration="1000" />
                 </div>
                 <div class="info-list-item">
                   <span>申报中(人)</span>
-                  <count-to :start-val="0" :end-val="109" :duration="1000" />
+                  <count-to :start-val="0" :end-val="homeData.providentFund?.declaringTotal" :duration="1000" />
                 </div>
                 <div class="info-list-item">
                   <span>已申报(人)</span>
-                  <count-to :start-val="0" :end-val="77" :duration="1000" />
+                  <count-to :start-val="0" :end-val="homeData.providentFund?.declaredTotal" :duration="1000" />
                 </div>
               </div>
             </div>
@@ -212,13 +212,27 @@
 <script>
 import CountTo from 'vue-count-to'
 import { mapGetters } from 'vuex'
+import { getHomeData } from '@/api/home'
 
 export default {
   components: {
     CountTo
   },
+  data() {
+    return {
+      homeData: {}
+    }
+  },
   computed: {
     ...mapGetters(['name', 'avatar', 'company', 'departmentName'])
+  },
+  created() {
+    this.getHomeData()
+  },
+  methods: {
+    async getHomeData() {
+      this.homeData = await getHomeData()
+    }
   }
 }
 </script>
