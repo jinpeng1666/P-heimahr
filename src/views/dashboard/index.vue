@@ -1,3 +1,4 @@
+<!-- eslint-disable no-sequences -->
 <template>
   <div class="dashboard">
     <div class="container">
@@ -101,6 +102,7 @@
             </div>
             <div class="chart">
               <!-- 图表 -->
+              <div ref="social" style="width: 100%; height: 100%" />
             </div>
           </div>
         </div>
@@ -130,6 +132,7 @@
             </div>
             <div class="chart">
               <!-- 图表 -->
+              <div ref="provident" style="width: 100%; height: 100%" />
             </div>
           </div>
         </div>
@@ -193,6 +196,16 @@ import CountTo from 'vue-count-to'
 import { mapGetters } from 'vuex'
 import { getHomeData, getMessageList } from '@/api/home'
 
+import * as echarts from 'echarts/core'
+import { LineChart } from 'echarts/charts'
+import { GridComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+echarts.use([
+  LineChart,
+  GridComponent,
+  CanvasRenderer
+])
+
 export default {
   components: {
     CountTo
@@ -206,9 +219,62 @@ export default {
   computed: {
     ...mapGetters(['name', 'avatar', 'company', 'departmentName'])
   },
+  watch: {
+    homeData() {
+      this.social.setOption({
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.homeData.socialInsurance?.xAxis
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.homeData.socialInsurance?.yAxis,
+            type: 'line',
+            areaStyle: {
+              color: '#04c9be'
+            },
+            lineStyle: {
+              color: '#04c9be'
+            }
+          }
+        ]
+      // eslint-disable-next-line no-sequences
+      }),
+      this.provident.setOption({
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.homeData.providentFund?.xAxis
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.homeData.providentFund?.yAxis,
+            type: 'line',
+            areaStyle: {
+              color: '#04c9be'
+            },
+            lineStyle: {
+              color: '#04c9be'
+            }
+          }
+        ]
+      })
+    }
+  },
   created() {
     this.getHomeData()
     this.getMessageList()
+  },
+  mounted() {
+    this.social = echarts.init(this.$refs.social)
+    this.provident = echarts.init(this.$refs.provident)
   },
   methods: {
     async getHomeData() {
